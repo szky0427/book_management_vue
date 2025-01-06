@@ -1,7 +1,7 @@
 <template>
   <div
     class="modal fade"
-    id="updateModal"
+    id="completeModal"
     tabindex="-1"
     aria-labelledby="exampleModalLabel"
     aria-hidden="true"
@@ -9,7 +9,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="updateModalLabel">更新完了</h1>
+          <h1 class="modal-title fs-5" id="completeModalLabel">完了</h1>
           <button
             type="button"
             class="btn-close"
@@ -17,7 +17,7 @@
             aria-label="Close"
           ></button>
         </div>
-        <div class="modal-body">更新が完了しました。</div>
+        <div class="modal-body">{{message}}</div>
         <div class="modal-footer">
           <button
             type="button"
@@ -34,10 +34,16 @@
 
 <script>
 export default {
-  name: "UpdateModal",
+  name: "CompleteModal",
+  data() {
+    return {
+      message: ''
+    }
+  },
   methods: {
-    show() {
-      const modal = new bootstrap.Modal(document.getElementById("updateModal"));
+    show(message) {
+      this.message = message
+      const modal = new bootstrap.Modal(document.getElementById("completeModal"));
       modal.show();
     },
   },

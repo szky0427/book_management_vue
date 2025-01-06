@@ -16,20 +16,19 @@
       </button>
     </div>
     <div class="alert alert-primary w-75">
-      <div class="mb-3">
+      <!-- <div class="mb-3">
         <label class="form-label text-start d-block">ID</label>
         <input
           type="text"
           class="form-control"
           id="bookId"
           v-model="bookId"
-          disabled
           required
         />
         <div class="invalid-feedback text-start">
           書籍IDを入力してください。
         </div>
-      </div>
+      </div> -->
       <div class="mb-3">
         <label class="form-label text-start d-block">タイトル</label>
         <input
@@ -56,7 +55,7 @@
       </div>
       <div class="mb-3">
         <label class="form-label text-start d-block">出版状況</label>
-        <div class="form-check col-2">
+        <div class="form-check">
           <input
             class="form-check-input"
             type="radio"
@@ -65,11 +64,14 @@
             value="0"
             v-model="publishStatus"
             required
-            v-bind:disabled="publishStatusStore == '1'"
           />
-          <label class="form-check-label" for="publishStatus0"> 未出版 </label>
+          <div class="col-2 text-start">
+            <label class="form-check-label text-start" for="publishStatus0">
+              未出版
+            </label>
+          </div>
         </div>
-        <div class="form-check col-2">
+        <div class="form-check">
           <input
             class="form-check-input"
             type="radio"
@@ -78,12 +80,15 @@
             value="1"
             v-model="publishStatus"
             required
-            v-bind:disabled="publishStatusStore == '1'"
           />
-          <label class="form-check-label" for="publishStatus1"> 出版済 </label>
-        </div>
-        <div class="invalid-feedback text-start">
-          出版状況を選択してください。
+          <div class="col-2 text-start">
+            <label class="form-check-label text-start" for="publishStatus1">
+              出版済
+            </label>
+          </div>
+          <div class="invalid-feedback text-start">
+            出版状況を選択してください。
+          </div>
         </div>
       </div>
       <div class="mb-3">
@@ -146,7 +151,7 @@
         >
           戻る
         </button>
-        <button class="btn btn-primary col m-2" type="submit">更新</button>
+        <button class="btn btn-primary col m-2" type="submit">登録</button>
       </div>
     </div>
   </form>
@@ -159,11 +164,7 @@ import { useRoute } from "vue-router";
 import CompleteModal from "./CompleteModal.vue";
 
 export default {
-  name: "UpdateBook",
-  setup() {
-    const route = useRoute(); // 現在のルートを取得
-    return { route };
-  },
+  name: "CreateBook",
   components: {
     CompleteModal,
   },
@@ -177,10 +178,12 @@ export default {
       publishStatusName: "",
       authors: [],
       authorsPulldown: [],
-      publishStatusStore: "" // DBに登録されている出版状況
     };
   },
   methods: {
+    publishStatusDisabled(publishStatus) {
+      return publishStatus == "1" ? true : false;
+    },
     hasDuplication(authorId) {
       return this.authors.filter((author) => author.id == authorId).length > 1;
     },
@@ -212,24 +215,6 @@ export default {
           console.error("Error during request: ", error);
         });
     },
-    showDetail() {
-      const url = "/books/" + this.route.params.bookId;
-
-      axios
-        .get(url)
-        .then((result) => {
-          this.bookId = result.data.id;
-          this.title = result.data.title;
-          this.price = result.data.price;
-          this.publishStatus = result.data.publishStatus;
-          this.publishStatusName = result.data.publishStatusName;
-          this.authors = result.data.authors;
-          this.publishStatusStore = result.data.publishStatus;
-        })
-        .catch((error) => {
-          console.error("Error during request: ", error);
-        });
-    },
     addPulldown() {
       this.authors.push({ id: 0 });
     },
@@ -237,7 +222,7 @@ export default {
       this.authors.splice(index, 1);
     },
     updateBook() {
-      const url = "/books/" + this.route.params.bookId;
+      const url = "/books/create";
       let authorsIds = this.authors.map((author) => author.id);
       const requestData = {
         title: this.title,
@@ -246,10 +231,9 @@ export default {
         authorsIds: authorsIds,
       };
       axios
-        .put(url, requestData)
+        .post(url, requestData)
         .then((result) => {
           this.$refs.completeModal.show(result.data);
-          this.publishStatusStore = this.publishStatus;
         })
         .catch((error) => {
           console.error("Error during request: ", error);
@@ -258,7 +242,6 @@ export default {
   },
   mounted() {
     this.getPulldown();
-    this.showDetail();
   },
 };
 </script>
