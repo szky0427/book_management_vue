@@ -16,19 +16,6 @@
       </button>
     </div>
     <div class="alert alert-primary w-75">
-      <!-- <div class="mb-3">
-        <label class="form-label text-start d-block">ID</label>
-        <input
-          type="text"
-          class="form-control"
-          id="bookId"
-          v-model="bookId"
-          required
-        />
-        <div class="invalid-feedback text-start">
-          書籍IDを入力してください。
-        </div>
-      </div> -->
       <div class="mb-3">
         <label class="form-label text-start d-block">タイトル</label>
         <input
@@ -202,7 +189,7 @@ export default {
       if (!form.checkValidity() || inValidAuthors || authorsZero) {
         return;
       }
-      this.updateBook();
+      this.createBook();
     },
     getPulldown() {
       const url = "/pulldown/authors";
@@ -221,7 +208,7 @@ export default {
     deletePulldown(index) {
       this.authors.splice(index, 1);
     },
-    updateBook() {
+    createBook() {
       const url = "/books/create";
       let authorsIds = this.authors.map((author) => author.id);
       const requestData = {

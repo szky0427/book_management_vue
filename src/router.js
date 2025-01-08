@@ -4,6 +4,7 @@ import UpdateBook from "./components/UpdateBook.vue";
 import CreateBook from "./components/CreateBook.vue";
 import AuthorSearch from "./components/AuthorSearch.vue";
 import UpdateAuthor from "./components/UpdateAuthor.vue";
+import CreateAuthor from "./components/CreateAuthor.vue";
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -32,6 +33,11 @@ export const router = createRouter({
       path: "/author/:authorId",
       name: "updateAuthor",
       component: UpdateAuthor,
+    },
+    {
+      path: "/author/create",
+      name: "createAuthor",
+      component: CreateAuthor,
     },
   ],
 });
